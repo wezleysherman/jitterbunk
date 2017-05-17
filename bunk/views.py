@@ -38,6 +38,7 @@ class BunkView(generic.FormView):
     template_name = 'bunk/bunkview.html'
     form_class = BunkForm
     success_url = '../'
+
     # If a post command has been sent
     def form_valid(self, form):
         user_name = form.cleaned_data['bunk_name']
