@@ -1,0 +1,30 @@
+<h1>{{feed_user}} View</h1>
+<a href="{% url 'bunk:main' %}"> Main Feed </a>
+{% if bunk_list %}
+    <ul>
+    {% for bunk in bunk_list %}
+        <ul>
+            {% if feed_user.id == bunk.from_user.id %}
+                <b>You!</b>
+            {% else %}
+                <img src="../../static/{{bunk.from_user.profile_picture}}" width="56" height="56">
+                <a href="{% url 'bunk:user' bunk.from_user.id %}">
+                    {{ bunk.from_user }}
+                </a>
+            {% endif %}
+            bunked
+            {% if feed_user.id == bunk.to_user.id %}
+                <b>You!</b>
+            {% else %}
+                <img src="../../static/{{bunk.to_user.profile_picture}}" width="56" height="56">
+                <a href="{% url 'bunk:user' bunk.to_user.id %}">
+                    {{ bunk.to_user }}
+                </a>
+                at {{bunk.time}}
+            {% endif %}
+        </ul>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Looks like no one has bunked you!</p>
+{% endif %}
