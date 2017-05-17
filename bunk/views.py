@@ -63,13 +63,10 @@ class LoginView(generic.FormView):
     def form_valid(self, form):
         user_name = form.cleaned_data['user_name']
         user_pass = form.cleaned_data['user_pass']
-        #logout(self.request)
         user = get_object_or_404(User, Q(username=user_name) & Q(password=user_pass))
         login(self.request, user)
-        #user = authenticate(username=user_name, password=user_pass)
         if user is not None:
             return super(LoginView, self).form_valid(form)
-
 
 
 
