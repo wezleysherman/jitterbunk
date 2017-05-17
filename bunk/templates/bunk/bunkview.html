@@ -1,7 +1,9 @@
-<h1> Bunk User: </h1>
-<a href="{% url 'bunk:main' %}"> Main Feed </a>
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="BUNK!"/>
-</form>
+{% if request.user.is_authenticated %}
+    <h1> Bunk User: </h1>
+    <a href="{% url 'bunk:main' %}"> Main Feed </a>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="BUNK!"/>
+    </form>
+{% endif %}

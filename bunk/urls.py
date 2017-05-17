@@ -8,4 +8,6 @@ urlpatterns = [
     url(r'^$', views.MainFeed.as_view(), name='main'),
     url(r'^(?P<pk>[0-9]+)/$', views.UserFeed.as_view(), name='user'),
     url(r'^bunks/$', views.BunkView.as_view()),
+    url(r'^login/$', views.LoginView.as_view(), name='login'),
+    url(r'^logout/$', views.LogoutView.as_view()),
 ]

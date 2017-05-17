@@ -6,9 +6,10 @@ from django.db.models import Q
 from django.template import loader
 from django.http import HttpResponseRedirect
 from django.views import generic
+from django.contrib.auth import authenticate, logout, login
 from django.utils import timezone
 from .models import Bunk, User
-from .forms import BunkForm
+from .forms import BunkForm, LoginForm
 
 # Create your views here.
 class MainFeed(generic.ListView):
@@ -42,11 +43,33 @@ class BunkView(generic.FormView):
     # If a post command has been sent
     def form_valid(self, form):
         user_name = form.cleaned_data['bunk_name']
-        new_bunk = Bunk()
         bunk_user = get_object_or_404(User, username=user_name)
-        # Assuming the current user for now -- will update with login
-        new_bunk.from_user = get_object_or_404(User, username='wezley')
-        new_bunk.to_user = bunk_user
-        new_bunk.time = datetime.datetime.now()
+        new_bunk = Bunk(from_user=self.request.user, to_user=bunk_user, time=datetime.datetime.now())
         new_bunk.save()
         return super(BunkView, self).form_valid(form)
+
+class LogoutView(generic.DetailView):
+    template_name = 'bunk/logout.html'
+    def get(self, request):
+        logout(self.request)
+        return HttpResponseRedirect('../login')
+
+class LoginView(generic.FormView):
+    template_name = 'bunk/jitter_login.html'
+    form_class = LoginForm
+    success_url = '../'
+
+    # Once user logs in
+    def form_valid(self, form):
+        user_name = form.cleaned_data['user_name']
+        user_pass = form.cleaned_data['user_pass']
+        #logout(self.request)
+        user = get_object_or_404(User, Q(username=user_name) & Q(password=user_pass))
+        login(self.request, user)
+        #user = authenticate(username=user_name, password=user_pass)
+        if user is not None:
+            return super(LoginView, self).form_valid(form)
+
+
+
+
